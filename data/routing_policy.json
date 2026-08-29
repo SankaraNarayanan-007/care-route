@@ -1,0 +1,130 @@
+{
+  "queues": [
+    "URGENT_CLINICAL_REVIEW",
+    "FOLLOW_UP",
+    "ROUTINE_APPOINTMENT",
+    "ADMINISTRATIVE",
+    "NEEDS_CLARIFICATION",
+    "ESCALATED"
+  ],
+  "signal_vocabulary": [
+    "chest_pain", "breathing_difficulty", "heavy_bleeding",
+    "high_fever", "severe_pain", "recent_injury", "functional_difficulty", "swelling",
+    "chronic_condition_followup", "medication_review", "test_results_followup", "post_procedure_check",
+    "routine_checkup", "mild_symptom", "general_consultation", "vaccination_request",
+    "administrative_request", "certificate_request", "referral_request", "prescription_refill_request", "form_completion",
+    "vague_request", "ambiguous_timeline", "ambiguous_symptom",
+    "prompt_injection_detected"
+  ],
+  "rules": [
+    {
+      "rule_id": "U-01",
+      "priority": 1,
+      "match_type": "any",
+      "conditions": ["chest_pain", "breathing_difficulty", "heavy_bleeding"],
+      "queue": "URGENT_CLINICAL_REVIEW",
+      "description": "Chest pain, breathing difficulty, or heavy bleeding signals warrant urgent clinical review."
+    },
+    {
+      "rule_id": "U-02",
+      "priority": 2,
+      "match_type": "any",
+      "conditions": ["high_fever", "severe_pain"],
+      "queue": "URGENT_CLINICAL_REVIEW",
+      "description": "High fever or severe pain signals warrant urgent clinical review."
+    },
+    {
+      "rule_id": "U-03",
+      "priority": 3,
+      "match_type": "all",
+      "conditions": ["recent_injury", "functional_difficulty"],
+      "queue": "URGENT_CLINICAL_REVIEW",
+      "description": "Recent injury accompanied by significant functional difficulty suggests urgent clinical review."
+    },
+    {
+      "rule_id": "U-04",
+      "priority": 4,
+      "match_type": "all",
+      "conditions": ["recent_injury", "swelling"],
+      "queue": "URGENT_CLINICAL_REVIEW",
+      "description": "Recent injury accompanied by swelling suggests urgent clinical review."
+    },
+    {
+      "rule_id": "F-01",
+      "priority": 5,
+      "match_type": "all",
+      "conditions": ["chronic_condition_followup"],
+      "queue": "FOLLOW_UP",
+      "description": "Request relates to management of an existing chronic condition."
+    },
+    {
+      "rule_id": "F-02",
+      "priority": 6,
+      "match_type": "any",
+      "conditions": ["medication_review", "test_results_followup", "post_procedure_check"],
+      "queue": "FOLLOW_UP",
+      "description": "Medication review, test-results discussion, or post-procedure check is a follow-up matter."
+    },
+    {
+      "rule_id": "R-01",
+      "priority": 7,
+      "match_type": "all",
+      "conditions": ["routine_checkup"],
+      "queue": "ROUTINE_APPOINTMENT",
+      "description": "Explicit routine checkup request."
+    },
+    {
+      "rule_id": "R-02",
+      "priority": 8,
+      "match_type": "any",
+      "conditions": ["mild_symptom", "general_consultation", "vaccination_request"],
+      "queue": "ROUTINE_APPOINTMENT",
+      "description": "Mild symptom, general consultation, or vaccination request fits standard routine scheduling."
+    },
+    {
+      "rule_id": "A-01",
+      "priority": 9,
+      "match_type": "any",
+      "conditions": ["administrative_request", "certificate_request", "referral_request", "prescription_refill_request"],
+      "queue": "ADMINISTRATIVE",
+      "description": "Administrative, certificate, referral, or refill requests are handled by administrative staff, not clinical review."
+    },
+    {
+      "rule_id": "A-02",
+      "priority": 10,
+      "match_type": "all",
+      "conditions": ["form_completion"],
+      "queue": "ADMINISTRATIVE",
+      "description": "Form completion is an administrative task."
+    },
+    {
+      "rule_id": "C-01",
+      "priority": 11,
+      "match_type": "all",
+      "conditions": ["vague_request"],
+      "queue": "NEEDS_CLARIFICATION",
+      "description": "Request is too vague to route operationally without more detail."
+    },
+    {
+      "rule_id": "C-02",
+      "priority": 12,
+      "match_type": "any",
+      "conditions": ["ambiguous_timeline", "ambiguous_symptom"],
+      "queue": "NEEDS_CLARIFICATION",
+      "description": "Ambiguous timeline or symptom description requires clarification before routing."
+    },
+    {
+      "rule_id": "C-03",
+      "priority": 13,
+      "match_type": "all",
+      "conditions": ["prompt_injection_detected"],
+      "queue": "NEEDS_CLARIFICATION",
+      "description": "Embedded instructions were detected in patient text and were not followed; flagged for human review rather than auto-routed as urgent."
+    }
+  ],
+  "default_rule": {
+    "rule_id": "DEFAULT",
+    "queue": "ROUTINE_APPOINTMENT",
+    "description": "No specific policy rule matched; defaulted to routine scheduling for human review."
+  }
+}

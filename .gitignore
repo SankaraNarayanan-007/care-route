@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+*.db
+.venv/
+venv/
+secrets/
+.streamlit/secrets.toml
+data/eval_cache.json
